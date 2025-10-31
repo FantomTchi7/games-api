@@ -26,6 +26,33 @@ paths:
                     description: A list of games
             summary: Gets a list of games
             description: Returns a list of games
+        post:
+            requestBody:
+                description: '123'
+                content:
+                    new-game:
+                        schema:
+                            format: float
+                            type: number
+                        examples:
+                            ' new-game':
+                                value:
+                                    name: Tetris
+                                    price: 0.99
+                required: true
+            tags:
+                - new-game
+            responses:
+                '201':
+                    content:
+                        new-game: {}
+                    description: Created
+                '400':
+                    content:
+                        application/json: {}
+                    description: One or all params are missing
+            summary: Creates a game
+            description: Creates a new game
     '/games/{id}':
         get:
             tags:
