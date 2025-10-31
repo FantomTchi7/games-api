@@ -7,4 +7,4 @@ Intitialize project:
 `npm i`
 
 Run project:
-`npm start`
+`node .\rest-client.js`
