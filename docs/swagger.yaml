@@ -1,115 +1,117 @@
 openapi: 3.0.2
 info:
-    title: games-api
-    version: 1.0.0
-    description: A brand new API with no content.  Go nuts!
+  title: games-api
+  version: 1.0.0
+  description: A simple API to manage a list of games.
 paths:
-    /games:
-        get:
-            requestBody:
-                content:
-                    new-game: {}
-                required: true
-            tags:
-                - games
-            responses:
-                '200':
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    type: string
-                            examples:
-                                List of games:
-                                    value: |-
-                                        [
-                                            'Witcher 3',
-                                            'Cyberpunk 2077'
-                                        ]
-                    description: A list of games
-                '201':
-                    content:
-                        new-game: {}
-                    description: '123'
-                '400':
-                    description: One or all params are missing
-            summary: Gets a list of games
-            description: Returns a list of games
-    '/games/{id}':
-        get:
-            tags:
-                - details
-            responses:
-                '200':
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    type: string
-                            examples:
-                                Full details of a given game:
-                                    value: |-
-                                        [
-                                            {id: 1, name: "Witcher 3", price: 29.99},
-                                            {id: 2, name: "Cyberpunk 2077", price: 59.99},
-                                            {id: 3, name: "Minecraft", price: 26.99},
-                                            {id: 4, name: "Counter-Strike: Global Offensive", price: 0},
-                                            {id: 5, name: "Roblox", price: 0},
-                                            {id: 6, name: "Grand Theft Auto V", price: 29.99},
-                                            {id: 7, name: "Valorant", price: 0},
-                                            {id: 8, name: "Forza Horizon 5", price: 59.99}
-                                        ]
-                    description: Full details of a given game
-                '404':
-                    content:
-                        application/json:
-                            schema:
-                                type: string
-                            examples:
-                                Error message:
-                                    value:
-                                        error: Error message.
-                    description: Return error when no game
-            operationId: id
-            summary: Get full details of a game
-            description: Returns full details of a given id game
-        delete:
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/delete-game'
-            responses:
-                '204': {}
-                '404': {}
+  /games:
+    get:
+      summary: Gets a list of games
+      description: Returns a list of all games.
+      tags:
+        - games
+      responses:
+        '200':
+          description: A list of games.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+              example:
+                - id: 1
+                  name: "Witcher 3"
+                  price: 29.99
+                - id: 2
+                  name: "Cyberpunk 2077"
+                  price: 59.99
+    post:
+      summary: Creates a new game
+      description: Adds a new game to the list.
+      tags:
+        - games
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewGame'
+      responses:
+        '21_CREATED':
+          description: The created game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: One or all params are missing
+  '/games/{id}':
+    get:
+      summary: Get full details of a game
+      description: Returns full details of a given id game.
+      tags:
+        - games
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the game to retrieve.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Full details of a given game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: Return error when no game is found.
+    delete:
+      summary: Deletes a game
+      description: Deletes a game by its ID.
+      tags:
+        - games
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the game to delete.
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Game not found
 components:
-    schemas:
-        delete-game:
-            description: ''
-            required:
-                - id
-            type: object
-            properties:
-                id:
-                    description: ''
-                    type: string
-            example:
-                id: 1
-        new-game:
-            title: Root Type for new-game
-            description: ''
-            required:
-                - price
-                - name
-            type: object
-            properties:
-                name:
-                    type: string
-                price:
-                    format: float
-                    type: number
-            example:
-                name: Tetris
-                price: 0.99
+  schemas:
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+      example:
+        id: 1
+        name: "Witcher 3"
+        price: 29.99
+    NewGame:
+      type: object
+      required:
+        - name
+        - price
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+      example:
+        name: Tetris
+        price: 0.99
