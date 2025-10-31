@@ -6,6 +6,10 @@ info:
 paths:
     /games:
         get:
+            requestBody:
+                content:
+                    new-game: {}
+                required: true
             tags:
                 - games
             responses:
@@ -24,35 +28,14 @@ paths:
                                             'Cyberpunk 2077'
                                         ]
                     description: A list of games
-            summary: Gets a list of games
-            description: Returns a list of games
-        post:
-            requestBody:
-                description: '123'
-                content:
-                    new-game:
-                        schema:
-                            format: float
-                            type: number
-                        examples:
-                            ' new-game':
-                                value:
-                                    name: Tetris
-                                    price: 0.99
-                required: true
-            tags:
-                - new-game
-            responses:
                 '201':
                     content:
                         new-game: {}
-                    description: Created
+                    description: '123'
                 '400':
-                    content:
-                        application/json: {}
                     description: One or all params are missing
-            summary: Creates a game
-            description: Creates a new game
+            summary: Gets a list of games
+            description: Returns a list of games
     '/games/{id}':
         get:
             tags:
@@ -92,3 +75,41 @@ paths:
             operationId: id
             summary: Get full details of a game
             description: Returns full details of a given id game
+        delete:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/delete-game'
+            responses:
+                '204': {}
+                '404': {}
+components:
+    schemas:
+        delete-game:
+            description: ''
+            required:
+                - id
+            type: object
+            properties:
+                id:
+                    description: ''
+                    type: string
+            example:
+                id: 1
+        new-game:
+            title: Root Type for new-game
+            description: ''
+            required:
+                - price
+                - name
+            type: object
+            properties:
+                name:
+                    type: string
+                price:
+                    format: float
+                    type: number
+            example:
+                name: Tetris
+                price: 0.99
